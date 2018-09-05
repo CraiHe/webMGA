@@ -1,3 +1,3 @@
 # webMGA
 
-> To be Updating...
+> Updating now..
