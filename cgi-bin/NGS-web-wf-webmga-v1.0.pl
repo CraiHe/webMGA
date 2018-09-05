@@ -4,7 +4,7 @@
 ################################################################################
 
 ########## local variables etc. Please edit
-$NGS_root     = "/home/oasis/data/NGS-ann-project";
+$NGS_root     = "/home/hezp/data/NGS-ann-project";
 $NGS_root     = $G_NGS_root if ($G_NGS_root); #### taking from command line option from main NGS-wf.pl
 
 ########## more local variables, do not edit next three lines
@@ -14,10 +14,10 @@ $NGS_bin_dir  = "$NGS_root/apps/bin";
 $NGS_ref_dir  = "$NGS_root/refs";
 
 ########## local settings
-$NGS_working_dir = "/home/oasis/data/webcomp/webmga/web-session/metagenomics";
+$NGS_working_dir = "/home/hezp/data/webcomp/webmga/web-session/metagenomics";
 $NGS_max_job_per_ip = 100;
-$NGS_job_download_path = "http://weizhongli-lab.org/webMGA/result";
-$NGS_www_job_download_dir = "/home/oasis/data/www/home/webMGA/result/output";
+$NGS_job_download_path = "http://159.226.50.142/webMGA/result";
+$NGS_www_job_download_dir = "/home/hezp/data/www/home/webMGA/result/output";
 
 ########## computation resources for execution of jobs
 ########## http://wiki.ibest.uidaho.edu/index.php/Tutorials:_SGE_PBS_Converting 
@@ -56,7 +56,7 @@ $NGS_batch_jobs{"cd-hit-dup-PE"} = {
   "execution"         => "qsub_1",
   "cores_per_cmd"     => 4,
   "command"           => <<EOD,
-$NGS_bin_dir/cd-hit-dup -i \\UPLOADS.0 -i2 \\UPLOADS.1 -o \\SELF/output -u 50 \\CMDOPTS.0 > \\SELF/output.log
+$NGS_bin_dir/cd-hit-auxtools/cd-hit-dup -i \\UPLOADS.0 -i2 \\UPLOADS.1 -o \\SELF/output -u 50 \\CMDOPTS.0 > \\SELF/output.log
 $NGS_bin_dir/clstr_sort_by.pl < \\SELF/output.clstr > \\SELF/output-sorted.clstr
 rm -f \\SELF/output \\SELF/output2.clstr
 mv -f \\SELF/output-sorted.clstr \\SELF/output.clstr
@@ -86,7 +86,7 @@ $NGS_batch_jobs{"cd-hit-dup-SE"} = {
   "execution"         => "qsub_1",
   "cores_per_cmd"     => 4,
   "command"           => <<EOD,
-$NGS_bin_dir/cd-hit-dup -i \\UPLOADS.0 -o \\SELF/output -u 50 \\CMDOPTS.0 > \\SELF/output.log
+$NGS_bin_dir/cd-hit-auxtools/cd-hit-dup -i \\UPLOADS.0 -o \\SELF/output -u 50 \\CMDOPTS.0 > \\SELF/output.log
 $NGS_bin_dir/clstr_sort_by.pl < \\SELF/output.clstr > \\SELF/output-sorted.clstr
 rm -f \\SELF/output2.clstr
 mv -f \\SELF/output-sorted.clstr \\SELF/output.clstr
@@ -185,7 +185,7 @@ $NGS_batch_jobs{"h-cd-hit"} = {
   "command"           => <<EOD,
 $NGS_bin_dir/cd-hit -i \\UPLOADS.0     -o \\SELF/output.1 -c 0.9 -n 5 -d 0 -p 1 -T 4 -M 16000 \\CMDOPTS.0 > \\SELF/output1.log
 $NGS_bin_dir/cd-hit -i \\SELF/output.1 -o \\SELF/output.2 -c 0.6 -n 4 -d 0 -p 1 -T 4 -M 16000 \\CMDOPTS.1 > \\SELF/output2.log
-$NGS_prog_dir/cd-hit/clstr_rev.pl \\SELF/output.1.clstr \\SELF/output.2.clstr > \\SELF/output.clstr
+$NGS_bin_dir/clstr_rev.pl \\SELF/output.1.clstr \\SELF/output.2.clstr > \\SELF/output.clstr
 $NGS_bin_dir/clstr_sort_by.pl < \\SELF/output.clstr > \\SELF/output-sorted.clstr
 mv -f \\SELF/output-sorted.clstr \\SELF/output.clstr
 mv -f \\SELF/output.2 \\SELF/output
@@ -215,9 +215,9 @@ $NGS_batch_jobs{"h3-cd-hit"} = {
   "command"           => <<EOD,
 $NGS_bin_dir/cd-hit                    -i \\UPLOADS.0     -o \\SELF/output.1 -c 0.9 -n 5 -d 0 -p 1 -T 4 -M 16000 \\CMDOPTS.0 > \\SELF/output1.log
 $NGS_bin_dir/cd-hit                    -i \\SELF/output.1 -o \\SELF/output.2 -c 0.6 -n 4 -d 0 -p 1 -T 4 -M 16000 \\CMDOPTS.1 > \\SELF/output2.log
-$NGS_prog_dir/psi-cd-hit/psi-cd-hit.pl -i \\SELF/output.2 -o \\SELF/output.3 -c 0.3 -P $NGS_bin_dir -core 4 \\CMDOPTS.2 > \\SELF/output3.log
-$NGS_prog_dir/cd-hit/clstr_rev.pl \\SELF/output.1.clstr       \\SELF/output.2.clstr > \\SELF/output.2-full.clstr
-$NGS_prog_dir/cd-hit/clstr_rev.pl \\SELF/output.2-full.clstr  \\SELF/output.3.clstr > \\SELF/output.clstr
+$NGS_bin_dir/psi-cd-hit/psi-cd-hit.pl -i \\SELF/output.2 -o \\SELF/output.3 -c 0.3 -P $NGS_prog_dir/blast/bin \\CMDOPTS.2 > \\SELF/output3.log
+$NGS_bin_dir/clstr_rev.pl \\SELF/output.1.clstr       \\SELF/output.2.clstr > \\SELF/output.2-full.clstr
+$NGS_bin_dir/clstr_rev.pl \\SELF/output.2-full.clstr  \\SELF/output.3.clstr > \\SELF/output.clstr
 $NGS_bin_dir/clstr_sort_by.pl < \\SELF/output.clstr > \\SELF/output-sorted.clstr
 mv -f \\SELF/output-sorted.clstr \\SELF/output.clstr
 mv -f \\SELF/output.3 \\SELF/output
@@ -244,7 +244,7 @@ $NGS_batch_jobs{"psi-cd-hit-DNA"} = {
   "execution"         => "qsub_1",
   "cores_per_cmd"     => 4,
   "command"           => <<EOD,
-$NGS_prog_dir/psi-cd-hit/psi-cd-hit.pl -i \\UPLOADS.0  -o \\SELF/output -c 0.9 -prog megablast -P $NGS_bin_dir -core 4 \\CMDOPTS.0 > \\SELF/output.log
+$NGS_bin_dir/psi-cd-hit/psi-cd-hit.pl -i \\UPLOADS.0  -o \\SELF/output -c 0.9 -prog megablast -P $NGS_prog_dir/blast/bin \\CMDOPTS.0 > \\SELF/output.log
 $NGS_bin_dir/clstr_sort_by.pl < \\SELF/output.clstr > \\SELF/output-sorted.clstr
 mv -f \\SELF/output-sorted.clstr \\SELF/output.clstr
 
@@ -265,7 +265,7 @@ $NGS_batch_jobs{"psi-cd-hit-protein"} = {
   "execution"         => "qsub_1",
   "cores_per_cmd"     => 4,
   "command"           => <<EOD,
-$NGS_prog_dir/psi-cd-hit/psi-cd-hit.pl -i \\UPLOADS.0  -o \\SELF/output -c 0.3 -P $NGS_bin_dir -core 4 \\CMDOPTS.0 > \\SELF/output.log
+$NGS_bin_dir/psi-cd-hit/psi-cd-hit.pl -i \\UPLOADS.0  -o \\SELF/output -c 0.3 -P $NGS_prog_dir/blast/bin \\CMDOPTS.0 > \\SELF/output.log
 $NGS_bin_dir/clstr_sort_by.pl < \\SELF/output.clstr > \\SELF/output-sorted.clstr
 mv -f \\SELF/output-sorted.clstr \\SELF/output.clstr
 

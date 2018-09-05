@@ -10,7 +10,7 @@
 <script type="text/javascript" src="<?php print($ROOT) ?>/script/jquery.colorbox-min.js"></script>
 <script type="text/javascript" src="<?php print($ROOT) ?>/script/my.js"></script>
 <title>WebMGA | <?php print($title);if ($program && $program != 'overview') print(" | $program") ?></title>
-<link rel="stylesheet" href="<?php print($ROOT) ?>/css/main.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php print($ROOT) ?>/css/main5.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php print($ROOT) ?>/css/colorbox.css" type="text/css" media="screen" />
 <link rel="shortcut icon" href="<?php print($ROOT) ?>/image/favicon.ico" />
 <script type="text/javascript">

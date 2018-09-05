@@ -10,9 +10,9 @@
 ### ================================================================================
 
 use CGI;
-use DBI;
+#use DBI;
 use Email::Valid;
-use POSIX;
+#use POSIX;
 
 my $script_name = $0;
 my $script_dir = $0;
@@ -87,7 +87,7 @@ if (1) {
   $t_job_id = $program;
   $t_job = $NGS_batch_jobs{$t_job_id};
   my_exit_n_db("$t_job_id not defined") unless (defined($t_job));
-  $t_execution = $NGS_executions{ $t_job->{"execution"} };
+  $t_execution = $NGS_executions{ $t_job->{"execution"} };        ##$t_job->{"execution"} ----> qsub_1
 
   open(README, "> $job_dir/README") || die "can not write to $job_dir/README";
   print README $t_job->{"readme"};
@@ -132,6 +132,7 @@ if (1) {
 
   open(TSH, "> $t_sh_file") || die "can not write to $t_sh_file\n";
   print TSH <<EOD;
+
 $t_execution->{"template"}
 #\$ -pe orte $t_job->{cores_per_cmd}
 
@@ -151,7 +152,8 @@ EOD
   close(TSH);
 
 
-  $cmd = `$t_execution->{"command"} $t_execution->{"command_name_opt"} $t_job_id $t_execution->{"command_err_opt"} $f_stderr $t_execution->{"command_out_opt"} $f_stdout $t_sh_file 2>$job_dir/qsub.err 1>$job_dir/qsub.out`;
+  # $cmd = `$t_execution->{"command"} $t_execution->{"command_name_opt"} $t_job_id $t_execution->{"command_err_opt"} $f_stderr $t_execution->{"command_out_opt"} $f_stdout $t_sh_file 2>$job_dir/qsub.err 1>$job_dir/qsub.out`;
+  $cmd = `sh $t_sh_file 2>$job_dir/qsub.err 1>$job_dir/qsub.out`;
   $cmd = `date +\%s > $f_queued`;
 } #### END if (1)
 
@@ -167,7 +169,8 @@ if($email){
     open(MAIL, "|/usr/sbin/sendmail -t");
     print MAIL <<EOD;
 To: $email
-From: liwz\@sdsc.edu
+#From: liwz\@sdsc.edu
+From: hezhipeng\@cnic.cn
 Subject: WebMGA jot status
 
 Dear User, 
